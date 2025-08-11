@@ -9,28 +9,24 @@ public class Palindromic_Partition {
         if(str.isEmpty()){
             return subStringList;
         }
-        StringBuilder strr = new StringBuilder(str);
         ArrayList<String> currString = new ArrayList<>();
-        helper( strr, 0,subStringList,currString);
+        helper( str, 0,subStringList,currString);
         return subStringList;
     }
-    static void helper(StringBuilder str,int index, List<List<String>> subStringList,ArrayList<String> currString){
+    static void helper(String str,int index, List<List<String>> subStringList,ArrayList<String> currString){
         if(index == str.length() || str.isEmpty()){
             ArrayList<String> newSubstring = new ArrayList<>(currString);
             subStringList.add(newSubstring);
             return;
         }
-        for(int i = 0; i<str.length(); i++){
+        for(int i = index; i<str.length(); i++){
 
-            String subStr1 = str.substring(0,i+1);
-             str = new StringBuilder(str.substring(i));
+            String subStr1 = str.substring(index,i+1);
             if(isPalindrome(subStr1)){
                 currString.add(subStr1);
-                helper(str,index+1,subStringList,currString);
+//                helper(str,index+1,subStringList,currString);
+                helper(str,i+1,subStringList,currString);
                 // backtrack
-                for(int k =0; k<str.length();k++){
-                    str.append(str.charAt(k));
-                }
                 currString.removeLast();
             }
         }
@@ -45,6 +41,7 @@ public class Palindromic_Partition {
         }
         return true;
     }
+
     public static void main(String[] args) {
         System.out.println(isPalindromicPartition("aaba"));
     }
