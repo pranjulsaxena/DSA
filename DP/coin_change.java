@@ -16,7 +16,6 @@ public class coin_change {
         }
         return  totalways;
     }
-// recursive approach 2
     static int helper3(int[]coins,int amount,int n){
         if(amount==0){
             return 1;
@@ -33,7 +32,34 @@ public class coin_change {
         return ways;
     }
 
-
+    // unbounded because a coin can be taken multiple times.
+    // using dp unbounded knapsack. variant of count the subsets for given amount problem(subset amount problem)
+    // time complexity: O(N*Amount) . Space Complexity: O(N*S)
+    static int Solve2(int[]coins,int amount){
+        int[][]t = new int[coins.length+1][amount+1];
+        return helper2(coins,amount,t,coins.length);
+    }
+    static int helper2(int[]coins,int amount,int[][]t,int n){
+        for(int i=0; i<=n;i++){
+            for(int j=0; j<=amount;j++){
+                if(i==0){
+                    t[i][j]=0;
+                }else if(j==0){
+                    t[i][j]=1;
+                }
+            }
+        }
+        for(int i=1; i<=n;i++){
+            for(int j=1; j<=amount; j++){
+                if(coins[i-1]<=j){
+                    t[i][j]=t[i][j-coins[i-1]]+t[i-1][j];
+                }else{
+                    t[i][j]=t[i-1][j];
+                }
+            }
+        }
+        return t[n][amount];
+    }
     public static void main(String[] args) {
         System.out.println(Solve2(new int[]{1,2,3},5));
     }
