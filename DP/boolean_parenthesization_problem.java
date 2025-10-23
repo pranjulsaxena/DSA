@@ -1,7 +1,7 @@
 package DP;
 
 import java.util.Arrays;
-
+import java.util.HashMap;
 // gfg
 public class boolean_parenthesization_problem {
     static boolean evaluate(boolean b1, boolean b2, char op)
@@ -99,6 +99,42 @@ public class boolean_parenthesization_problem {
         return memo[i][j][req] = ans;
     }
 
+    // memoization using hashmap . key is made using changing parameters i.e i+j+req .
+    static int countRecur(int i, int j, boolean req, String s, HashMap<String,Integer> memo)
+    {
+        if(memo.containsKey(i+"_"+j+"_"+req)){
+            return memo.get(i+"_"+j+"_"+req);
+        }
+        if (i == j) {
+            return (req == (s.charAt(i) == 'T')) ? 1 : 0;
+        }
+        int ans = 0;
+        for (int k = i + 1; k < j; k += 2) {
+
+            int leftTrue = countRecur(i, k - 1, true, s);
+            int leftFalse = countRecur(i, k - 1, false, s);
+
+            int rightTrue = countRecur(k + 1, j, true, s);
+            int rightFalse = countRecur(k + 1, j, false, s);
+
+            if (evaluate(true, true, s.charAt(k)) == req) {
+                ans += leftTrue * rightTrue;
+            }
+            if (evaluate(true, false, s.charAt(k)) == req) {
+                ans += leftTrue * rightFalse;
+            }
+            if (evaluate(false, true, s.charAt(k)) == req) {
+                ans += leftFalse * rightTrue;
+            }
+            if (evaluate(false, false, s.charAt(k))
+                    == req) {
+                ans += leftFalse * rightFalse;
+            }
+        }
+
+         memo.put(i+"_"+j+"_"+req,ans);
+        return ans;
+    }
     static int countWays(String s)
     {
 
@@ -110,7 +146,9 @@ public class boolean_parenthesization_problem {
                 Arrays.fill(row, -1);
             }
         }
-        return countRecur(0, n - 1, 1, s, memo);
+//        return countRecur(0, n - 1, 1, s, memo);
+        HashMap<String,Integer> dp = new HashMap<>();
+        return countRecur(0,n-1,true,s,dp);
     }
 
     public static void main(String[] args)
