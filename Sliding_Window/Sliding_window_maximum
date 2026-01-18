@@ -1,0 +1,41 @@
+package Sliding_Window;
+
+import java.util.Arrays;
+import java.util.Deque;
+import java.util.LinkedList;
+
+
+public class Maximum_sub_array_of_size_k {
+    public static int[] maxSlidingWindow(int[] nums, int k) {
+        int low = 0;
+        int high =0;
+        int i =0;
+        int []arr = new int[(nums.length-k)+1];
+
+        Deque<Integer> queue = new LinkedList<>();
+        while(high<nums.length){
+            while(!queue.isEmpty()&&nums[high]>queue.getLast()){
+                queue.removeLast();
+            }
+            queue.addLast(nums[high]);
+
+            if(high-low+1<k){
+                high++;
+            }else if (high-low+1==k){
+                arr[i++]=queue.getFirst();
+                if(queue.getFirst()==nums[low]){
+                    queue.removeFirst();
+                }
+                high++;
+                low++;
+            }
+        }
+
+
+        return arr;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(Arrays.toString(maxSlidingWindow(new int[]{1,3,-1,-3,5,3,6,7},3)));
+    }
+}
